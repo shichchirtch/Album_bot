@@ -107,6 +107,14 @@ async def process_back_command(message: Message, state:FSMContext):
     msg = Message.model_validate(return_to_message).as_(bot)
     await message.delete()
     await msg.delete()
+
+    kadr_data = await return_kadr(user_id)
+    if kadr_data != '':
+        return_to_message = Message(**json.loads(kadr_data))
+        msg = Message.model_validate(return_to_message).as_(bot)
+        await msg.delete()
+        await reset_kadr(user_id)
+
     first_foto_atw = await message.answer_photo(photo=menu_foto,
                                                 reply_markup=inline_kb)
     js_first_foto_atw = first_foto_atw.model_dump_json(exclude_none=True)

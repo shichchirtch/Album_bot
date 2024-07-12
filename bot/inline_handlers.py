@@ -14,7 +14,7 @@ from postgres_functions import (set_pages, insert_data_in_kadr, page_listai,
                                 return_page_index, return_base,
                                 insert_data_in_base, insert_text_in_msg,
                                 reset_base, return_bookmarks, add_new_bookmark,
-                                return_kadr, del_bookmarck, return_msg)
+                                return_kadr, del_bookmarck, return_msg, reset_msg)
 from lexicon import *
 from bot_instance import bot
 import json
@@ -25,6 +25,13 @@ cb_router = Router()
 async def go_to_port(callback: CallbackQuery, state:FSMContext):
     await state.set_state(FSM_ST.slide)
     user_id = callback.from_user.id
+    msg_data = await return_msg(user_id)
+    if msg_data != '':
+        return_to_message = Message(**json.loads(msg_data))
+        msg = Message.model_validate(return_to_message).as_(bot)
+        await msg.delete()
+        await reset_msg(user_id)
+
     page_index = 2
     await set_pages(user_id, page_index)
     try:
