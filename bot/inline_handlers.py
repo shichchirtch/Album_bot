@@ -306,6 +306,7 @@ async def process_del_bookmark_press(callback: CallbackQuery):
         no_marks_respond = await callback.message.edit_text(text=no_bookmarks)
         await asyncio.sleep(2)
         await no_marks_respond.delete()
+        await reset_msg(user_id)
     await callback.answer()
 
 
