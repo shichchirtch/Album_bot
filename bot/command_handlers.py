@@ -254,11 +254,13 @@ async def process_bookmarks_command(message: Message):
             pass
 
     bm_data = await return_bookmarks(user_id)
+
     if bm_data:
-        await message.answer(
+        att = await message.answer(
             text=bookmark_list,
             reply_markup=create_bookmarks_keyboard(*bm_data))
-        js_bm_atw = bm_data.model_dump_json(exclude_none=True)
+
+        js_bm_atw = att.model_dump_json(exclude_none=True)
         await insert_text_in_msg(user_id, js_bm_atw)
     else:
         no_bookmark = await message.answer(text=no_bookmarks)
