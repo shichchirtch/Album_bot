@@ -12,3 +12,4 @@ class FSM_ST(StatesGroup):
     waiting = State()
     slide = State()
     text_mess = State()
+    show = State()

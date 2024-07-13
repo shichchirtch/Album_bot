@@ -206,7 +206,7 @@ async def go_to_preise(callback: CallbackQuery, state:FSMContext):
 @cb_router.callback_query(SLIDE_FILTER(), StateFilter(FSM_ST.general))
 async def show_sleiden(callback: CallbackQuery, state:FSMContext):
     user_id = callback.from_user.id
-    await state.set_state(FSM_ST.slide)
+    await state.set_state(FSM_ST.show)
     print('we are into sleiden handler')
     slide_ant = await callback.message.answer(text='Drücken Sie Menü, um den Vorgang zu beenden',
                                   reply_markup=menu_clava)

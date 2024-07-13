@@ -15,7 +15,7 @@ async def show_slide_show(kadr):
         counter += 1
         for page in arr:
             try:
-                await sleep(2.5)
+                await sleep(2.4)
                 await kadr.edit_media(
                     media=InputMediaPhoto(media=pagin_dict[page]
                                           ))

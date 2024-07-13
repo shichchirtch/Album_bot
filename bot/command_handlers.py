@@ -130,7 +130,7 @@ async def process_back_command(message: Message, state:FSMContext):
 @ch_router.message(Command(commands='slide_show'), ~StateFilter(FSM_ST.waiting))
 async def process_command_slide_show(message: Message, state:FSMContext):
     user_id = message.from_user.id
-    await state.set_state(FSM_ST.slide)
+    await state.set_state(FSM_ST.show)
     await message.delete()
     att = await message.answer('Um zurückzukehren, klicken Sie auf die Menüschaltfläche',
                                reply_markup=menu_clava)
@@ -243,11 +243,23 @@ async def process_waiting(message: Message):
 async def process_bookmarks_command(message: Message):
     user_id = message.from_user.id
     print('process_bookmarks_command works')
+    msg_data = await return_msg(user_id)
+    if msg_data != '':
+        return_to_message = Message(**json.loads(msg_data))
+        msg = Message.model_validate(return_to_message).as_(bot)
+        try :
+            await msg.delete()
+            await reset_msg(user_id)
+        except TelegramBadRequest:
+            pass
+
     bm_data = await return_bookmarks(user_id)
     if bm_data:
         await message.answer(
             text=bookmark_list,
             reply_markup=create_bookmarks_keyboard(*bm_data))
+        js_bm_atw = bm_data.model_dump_json(exclude_none=True)
+        await insert_text_in_msg(user_id, js_bm_atw)
     else:
         no_bookmark = await message.answer(text=no_bookmarks)
         await asyncio.sleep(4)
